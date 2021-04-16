@@ -7,4 +7,5 @@ public interface WordService {
 	public void printWord();
 	public void viewWord();
 	public WordVO getWord();
+	public void selectMenu();
 }

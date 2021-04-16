@@ -14,20 +14,31 @@ import java.util.Scanner;
 
 import com.calloor.word.model.WordVO;
 import com.calloor.word.service.WordService;
+import com.rudgjs.standard.MenuService;
+import com.rudgjs.standard.impl.MenuServiceImplV1;
 
 public class WordServiceImplV1_2 implements WordService {
 
-	List<WordVO> wordList;
-	Scanner scan;
-	Random rd;
-
+	protected List<WordVO> wordList;
+	protected Scanner scan;
+	protected Random rd;
+	protected MenuService menuService;//myJDK
+	protected String strEng;
+	protected int score; // 시작 점수
+	protected int rCount;
+	
+	
+	
 	public WordServiceImplV1_2() {
 
 		wordList = new ArrayList<WordVO>();
 		scan = new Scanner(System.in);
 		Random rd = new Random();
+		strEng = new String(); // String 형 english
+		rCount = 3;// 재도전 3회
+		
 		this.loadWord();
-		this.viewWord();
+		this.selectMenu();
 
 	}
 
@@ -270,8 +281,49 @@ public class WordServiceImplV1_2 implements WordService {
 		
 		
 	}
+
+	@Override
+	public void selectMenu() {
+		// TODO 시작화면
+		
+		List<String> menuList = new ArrayList<String>();
+		menuList.add("게임 시작");
+		menuList.add("점수 불러오기");
+		menuList.add("점수 저장");
+		menuService = new MenuServiceImplV1("뤼팡 단어 게임", menuList);
+		while(true) {
+			Integer intMenu = menuService.selectMenu();
+			if(intMenu == null) {
+				System.out.println("종료!");
+				break;
+			}
+			if(intMenu == 1) {
+				this.viewWord();
+			}else if(intMenu == 2) {
+				this.readCount();
+			}else if(intMenu ==3) {
+				this.saveCount();
+			}
+		}
+	}
 	
-	
+	protected String[] splitWords() {
+		
+		WordVO vo = this.getWord();
+		this.strEng = vo.getEnglish();
+		String[] strWords = this.strEng.split("");
+		for (int i = 0; i < 100; i++) {
+			int index1 = rd.nextInt(strWords.length);
+			int index2 = rd.nextInt(strWords.length);
+
+			String temp = strWords[index1];
+			strWords[index1] = strWords[index2];
+			strWords[index2] = temp;
+		}
+		
+		
+		return strWords;
+	}
 	
 	
 	

@@ -189,4 +189,10 @@ public class WordServiceImplV1 implements WordService {
 	public void makeWord() {
 
 	}
+
+	@Override
+	public void selectMenu() {
+		// TODO Auto-generated method stub
+		
+	}
 }

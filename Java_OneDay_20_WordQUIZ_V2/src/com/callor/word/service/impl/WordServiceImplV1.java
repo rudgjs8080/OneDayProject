@@ -15,7 +15,7 @@ import com.callor.word.service.WordService;
 import com.rudgjs.standard.MenuService;
 import com.rudgjs.standard.impl.MenuServiceImplV1;
 
-public class WordServiceImplV1 implements WordService{
+public class WordServiceImplV1 implements WordService {
 
 	protected List<WordVO> wordList;
 	protected List<String> menuList;
@@ -24,9 +24,8 @@ public class WordServiceImplV1 implements WordService{
 	protected Random rd;
 	protected String strEng;
 	protected String strKor;
-	protected int score ;
-	
-	
+	protected int score;
+
 	public WordServiceImplV1() {
 
 		wordList = new ArrayList<WordVO>();
@@ -38,12 +37,9 @@ public class WordServiceImplV1 implements WordService{
 		String strKor = new String();// 힌트용
 		score = 10; // 시작 점수
 		
-		
-	
-	
+		this.loadWord();
 	}
-	
-	
+
 	@Override
 	public void selectMenu() {
 		// TODO Auto-generated method stub
@@ -52,17 +48,17 @@ public class WordServiceImplV1 implements WordService{
 		menuList.add("점수 불러오기");
 		menuList.add("점수 저장");
 		menuService = new MenuServiceImplV1("뤼팡 단어 게임", menuList);
-		while(true) {
+		while (true) {
 			Integer intMenu = menuService.selectMenu();
-			if(intMenu == null) {
+			if (intMenu == null) {
 				System.out.println("종료!");
 				break;
 			}
-			if(intMenu == 1) {
+			if (intMenu == 1) {
 				this.viewWord();
-			}else if(intMenu == 2) {
+			} else if (intMenu == 2) {
 				this.readScore();
-			}else if(intMenu ==3) {
+			} else if (intMenu == 3) {
 				this.saveScore();
 			}
 		}
@@ -71,7 +67,7 @@ public class WordServiceImplV1 implements WordService{
 	@Override
 	public void loadWord() {
 		// TODO Auto-generated method stub
-		String wordName = "src/com/calloor/word/word.txt";
+		String wordName = "src/com/callor/word/word.txt";
 
 		FileReader fileReader = null;
 		BufferedReader buffer = null;
@@ -106,75 +102,86 @@ public class WordServiceImplV1 implements WordService{
 	@Override
 	public void printWord() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void viewWord() {
 		// TODO Auto-generated method stub
-		this.getWord();
-		String[] strEng = this.splitWords();//쪼건 단어를 배열화
-		System.out.println("=".repeat(60));
-		System.out.println("제시된 영 단어를 바르게 배열하시오 (QUIT : 게임 종료)");
-		System.out.println(Arrays.toString(strEng));// 배열화 한 단어를 나열
-		System.out.println("=".repeat(60));
-		
-	
-		
+		while (true) {
+			String[] strEng = this.splitWords();// 조건 단어를 배열화
+			System.out.println("=".repeat(60));
+			System.out.println("제시된 영 단어를 바르게 배열하시오 (QUIT : 게임 종료)");
+			System.out.println(Arrays.toString(strEng));// 배열화 한 단어를 나열
+			System.out.println("=".repeat(60));
+			Integer hint = this.hintWord();
+			if (hint == null) {
+				return;
+			}
+		}
+
 	}
 
 	@Override
 	public Integer hintWord() {
 		// TODO 힌트 및 유효성 검사 null 값 반환을 위해 Integer형 변환
-		System.out.print("입력 >>");
-		String strInput = scan.nextLine();
-		if(strInput.equalsIgnoreCase(this.strEng)) {
-			System.out.println("정답입니다 3점을 획득하셨습니다");
-			this.score += 3;
-			return null;
-		}else if(strInput.equalsIgnoreCase(this.strEng) == false) {
-			System.out.println("오답을 입력하셨습니다");
-			System.out.println("1. 재도전, 2. 건너뛰기");
-			System.out.println("입력 >>");
-			String strInput1 = scan.nextLine();
-			if(strInput1.equalsIgnoreCase("1")){
-				System.out.println("힌트를 받으시겠습니까? Yes : 1, No : 2");
-				System.out.println("입력 >>");
-				String strInput2 = scan.nextLine();
-				if(strInput2.equalsIgnoreCase("1")) {
-					System.out.println("뜻 : " + this.strKor);
-				}else if(strInput2.equalsIgnoreCase("2")) {
-					
-				}else {
-					System.out.println("잘못선택하셨습니다");
-					
+		while (true) {
+			System.out.print("입력 >>");
+			String strInput = scan.nextLine();
+			if (strInput.equalsIgnoreCase(this.strEng)) {
+				System.out.println("뜻 : " + this.strKor);
+				System.out.println("정답입니다 3점을 획득하셨습니다");
+				this.score += 3;
+				return null;
+			} else if (strInput.equalsIgnoreCase(this.strEng) == false) {
+				System.out.println("오답을 입력하셨습니다");
+				Integer hintOrPass = this.HintOrPass();
+				if (hintOrPass == null) {
+					return null;
+				} else if (hintOrPass == 1) {
+					continue;
 				}
 			}
 		}
+
+	}
+
+	public Integer HintOrPass() {
+		while (true) {
+			System.out.println("1. 힌트, 2. 건너뛰기");
+			System.out.println("입력 >>");
+			String strHint = scan.nextLine();
+			if (strHint.equalsIgnoreCase("1")) {
+				System.out.println("뜻 : " + this.strKor);
+				return 1;
+			} else if (strHint.equals("2")) {
+				System.out.println("건너뛰기를 선택하셨습니다");
+				return null;
+			} else {
+				System.out.println("선택을 잘못하셨습니다");
+				continue;
+			}
+
+		}
 		
-		
-		
-		
-		return null;
-				
 	}
 
 	@Override
 	public void saveScore() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void readScore() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public WordVO getWord() {
 		// TODO 단어 꺼내오기
-		
+
 		rd = new Random();
 		int nSize = wordList.size();
 		int num = rd.nextInt(nSize);
@@ -183,15 +190,17 @@ public class WordServiceImplV1 implements WordService{
 
 		return wordVO;
 	}
+
 	protected String[] splitWords() {
-		
+
 		WordVO vo = this.getWord();
 		this.strEng = vo.getEnglish();
+		this.strKor = vo.getKorea();
 		String[] strWords = this.strEng.split("");
-		for(int i = 0 ; i < 100 ; i++) {
+		for (int i = 0; i < 100; i++) {
 			int index1 = rd.nextInt(strWords.length);
 			int index2 = rd.nextInt(strWords.length);
-			
+
 			String temp = strWords[index1];
 			strWords[index1] = strWords[index2];
 			strWords[index2] = temp;

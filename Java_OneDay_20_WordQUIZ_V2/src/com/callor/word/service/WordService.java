@@ -10,7 +10,7 @@ public interface WordService {
 
 	public void printWord();
 
-	public void viewWord();
+	public Integer viewWord();
 
 	public Integer hintWord();
 

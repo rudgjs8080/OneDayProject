@@ -6,6 +6,6 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/bizworks/javaworks/Biz_403_2021_03_Java/myJDK/rudgjs8080JDK.jar"/>
+	<classpathentry kind="lib" path="C:/Bizworks/javaworks/myJDK/rudgjs8080JDK.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
